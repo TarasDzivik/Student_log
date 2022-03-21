@@ -1,0 +1,96 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 400px;
+  padding: 15px;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+  margin-top: 0px;
+  }
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+#form-signin input[type="email"] {
+  background-image: '';
+  margin-bottom: 5px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-radius: 5px;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 5px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-radius: 5px;
+}
+.registration[type="text"] {
+  margin-bottom: 5px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-radius: 5px;
+}
+#Age input[type="number"]{
+  margin-bottom: 5px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-radius: 5px;
+}
+
+#Button-Ok {
+  background-color: rgb(38, 194, 72);
+  border-radius: 5px;
+  padding-block: 5px;
+  padding-inline: 57px;
+  font-size: 28px;
+}
+#Button-Subscribe {
+  background-color: rgb(161, 0, 0);
+  color: #fff;
+  border-radius: 5px;
+  padding-block: 5px;
+  padding-inline: 33px;
+  font-size:15px;
+}
+
+#Button-SignUp {
+  background-color: rgb(38, 106, 194);
+  margin-top: 5px;
+  border-radius: 5px;
+  padding-block: 5px;
+  padding-inline: 57px;
+  font-size: 28px;
+}
+
+#Name {
+  margin-bottom: 5px;
+  grid-template-areas: inherit;
+}
+
+#input-fields{
+  margin-top: 5px;
+}
