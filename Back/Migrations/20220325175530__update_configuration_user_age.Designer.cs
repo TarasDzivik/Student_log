@@ -4,14 +4,16 @@ using Back.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Back.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220325175530__update_configuration_user_age")]
+    partial class _update_configuration_user_age
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,14 +35,14 @@ namespace Back.Migrations
                     b.Property<string>("Desctiption")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("ImagePath")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)")
                         .HasColumnName("Name");
-
-                    b.Property<byte[]>("TitleImagePath")
-                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
 

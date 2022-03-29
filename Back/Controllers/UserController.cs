@@ -41,7 +41,7 @@ namespace HoneycombTT.Controller
         }
 
         [HttpPost]
-        public async Task<ActionResult<RegistrationDto>> Create(User user)
+        public async Task<ActionResult<UserCreateDto>> Create(User user)
         {
             if (!ModelState.IsValid)
             {

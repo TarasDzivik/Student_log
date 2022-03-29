@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Back.Data;
 using Back.Data.Models.Entities;
 using Back.DTOs;
+using Back.Models;
 using Back.Services.Validation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
@@ -26,8 +27,18 @@ namespace Back.Controllers
             db = context;
         }
 
+        //[HttpGet]
+        //public IActionResult GetUsers([FromQuery] UserParameters userParameters)
+        //{
+        //    // створити інтерфейс для керування контроллерів, щоб в подальшому організувати пагінацію сторінок
+        //    return db.Users.GetUsers().OrderBy(u => u.Name)
+        //        .Skip((userParameters.PageNumber - 1) * userParameters.PageSize)
+        //        .Take(userParameters.PageSize)
+        //        .ToList();
+        //}
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers([FromQuery] PaginationParameters pagination)
         {
             return await db.Users
                 .ProjectTo<UserDto>(mapper.ConfigurationProvider)
@@ -48,27 +59,27 @@ namespace Back.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<RegistrationDto>>
-            CreateUser(RegistrationDto userDto)
+        public async Task<ActionResult<UserCreateDto>>
+            CreateUser([FromQuery] UserCreateDto dto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var user = mapper.Map<User>(userDto);
+            var user = mapper.Map<User>(dto);
             db.Users.Add(user);
             await db.SaveChangesAsync();
             return Ok(user);
         }
         [HttpPut]
-        public async Task<ActionResult<UserDto>> UpdateUser(UserDto userDto)
+        public async Task<ActionResult<User>> UpdateUser(string Id, [FromQuery]User user)
         {
             // так як об'єкт User наслідує дуже багато прихованих
             // параметрів яких не має в UserDto в результаті і виникає
             // проблема з паралелізмом при збереженні БД, якщо
             // вхідні параметри брати з DTO файла
             
-            if (!db.Users.Any(x => x.Id == userDto.Id))
+            if (!db.Users.Any(x => x.Id == user.Id))
             {
                 return NotFound();
             }
@@ -76,25 +87,26 @@ namespace Back.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var user = mapper.Map<User>(userDto);
-                
-            try
-            {
-                user.Email = userDto.Email;
-                user.Age = userDto.Age;
-                user.Name = userDto.Name;
-                user.LastName = userDto.LastName;
-                db.Update(user);
+            //var user = mapper.Map<User>(dto);
 
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                ModelState.AddModelError(nameof(UpdateUser), "unable to save changes");
-                return StatusCode(500, ModelState);
-            }
-            //db.Users.Update(user);
-            //await db.SaveChangesAsync(); // !!! не зберігає зміни
+            //try
+            //{
+            //    user.Email = userDto.Email;
+            //    user.Age = userDto.Age;
+            //    user.Name = userDto.Name;
+            //    user.LastName = userDto.LastName;
+
+            //    db.Update(user);
+            //    await db.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    ModelState.AddModelError(nameof(UpdateUser), "unable to save changes");
+            //    return StatusCode(500, ModelState);
+            //}
+            db.Users.Update(user);
+            //db.Entry(user).State = EntityState.Modified;
+            await db.SaveChangesAsync(); // !!! не зберігає зміни
             return Ok(user);
         }
         [HttpDelete("{id}")]

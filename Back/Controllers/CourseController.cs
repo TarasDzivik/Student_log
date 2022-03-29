@@ -1,62 +1,100 @@
-﻿//using Back.Data;
-//using Back.Data.Models.Entities;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Back.Data;
+using Back.Data.DTOs;
+using Back.Data.Models.Entities;
+using Back.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace HoneycombTT.Controller
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class CourseController : ControllerBase
-//    {
-//        AppDbContext db;
-//        public CourseController(AppDbContext context) => db = context;
+namespace HoneycombTT.Controller
+{
+    [Route("api/course")]
+    [ApiController]
+    public class CourseController : ControllerBase
+    {
+        public AppDbContext db;
+        private readonly IMapper mapper;
+        public CourseController(AppDbContext context, IMapper mapper)
+        {
+            this.mapper = mapper;
+            db = context;
+        }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<CourseDto>>> GetAllCourses([FromQuery] PaginationParameters pagination)
+        {
+            return await db.Courses
+                .ProjectTo<CourseDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
 
-//        [HttpGet]
-//        public async Task<ActionResult<IEnumerable<Course>>> GetAllCourses()
-//        {
-//            return await db.Courses.ToListAsync();
-//        }
+        [HttpGet("id")]
+        public async Task<ActionResult<CourseDto>> GetCourseById(int id)
+        {
+            CourseDto course = await db.Courses
+               .ProjectTo<CourseDto>(mapper.ConfigurationProvider)
+               .FirstOrDefaultAsync(x => x.Id == id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(course);
+        }
 
-//        [HttpGet("id")]
-//        public async Task<ActionResult<Course>> GetCourseById(int id)
-//        {
-//            Course course = await db.Courses.FirstOrDefaultAsync(x => x.CourseId == id);
-//            if (course == null)
-//            {
-//                return NotFound();
-//            }
-//            return new ObjectResult(course);
-//        }
-//        [HttpPost]
-//        public async Task<ActionResult<Course>> Post(Course course)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                return BadRequest(ModelState);
-//            }
-//            db.Courses.Add(course);
-//            await db.SaveChangesAsync();
-//            return Ok(course);
-//        }
+        [HttpPost]
+        public async Task<ActionResult<CourseCreateDto>> CreateCourse(CourseCreateDto createDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var course = mapper.Map<Course>(createDto);
+            db.Courses.Add(course);
+            await db.SaveChangesAsync();
+            return Ok(course);
+        }
 
+        [HttpPut]
+        public async Task<ActionResult<Course>> CourseUpdate(int Id, [FromBody] Course course)
+        {
+            if (!db.Courses.Any(x => x.Id == course.Id))
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                db.Courses.Update(course);
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                ModelState.AddModelError(nameof(CourseUpdate), "unable to update course");
+                return StatusCode(500, ModelState);
+            }
+            return Ok(course); 
+        }
 
-//        [HttpPut]
-//        public async Task<ActionResult<Course>> Put(int id)
-//        {
-//            if (!db.Courses.Any(x => x.CourseId == id))
-//            {
-//                return NotFound();
-//            }
-//            db.Update(id);
-//            await db.SaveChangesAsync();
-//            return Ok(id);
-//        }
-//    }
-//}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Course>> Delete(int id)
+        {
+            Course course = db.Courses.FirstOrDefault(x => x.Id == id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            db.Courses.Remove(course);
+            await db.SaveChangesAsync();
+            return Ok(course);
+        }
+    }
+}

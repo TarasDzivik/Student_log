@@ -4,8 +4,7 @@ using FluentValidation;
 
 namespace Back.Services.Validation
 {
-    public class UserValidator : AbstractValidator<RegistrationDto>
-    // валідатор не працює при  User коли передаэмо RegistrationDto в методі POST
+    public class UserValidator : AbstractValidator<UserCreateDto>
     {
         public UserValidator()
         {

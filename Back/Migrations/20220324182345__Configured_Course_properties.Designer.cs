@@ -4,14 +4,16 @@ using Back.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Back.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220324182345__Configured_Course_properties")]
+    partial class _Configured_Course_properties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,28 +23,22 @@ namespace Back.Migrations
 
             modelBuilder.Entity("Back.Data.Models.Entities.Course", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CourseId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("DateOdStart")
                         .HasColumnType("date")
-                        .HasColumnName("Starts since");
+                        .HasColumnName("Course starts since");
 
-                    b.Property<string>("Desctiption")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)")
-                        .HasColumnName("Name");
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)")
+                        .HasColumnName("Course Name");
 
-                    b.Property<byte[]>("TitleImagePath")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("Id");
+                    b.HasKey("CourseId");
 
                     b.ToTable("Courses");
                 });
@@ -256,6 +252,7 @@ namespace Back.Migrations
 
                     b.Property<int>("Age")
                         .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("int");
 
                     b.Property<string>("LastName")
@@ -274,6 +271,11 @@ namespace Back.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnName("Registered Date");
+
+                    b.Property<byte[]>("Timestamp")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.HasDiscriminator().HasValue("User");
                 });

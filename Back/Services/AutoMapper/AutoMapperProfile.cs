@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Back.Data.DTOs;
 using Back.Data.Models.Entities;
 using Back.DTOs;
 using System;
@@ -14,8 +15,9 @@ namespace Back.Services.AutoMapper
         public AutoMapperProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<UserDto, User>().ReverseMap();
-            CreateMap<User, RegistrationDto>().ReverseMap();
+            CreateMap<User, UserCreateDto>().ReverseMap();
+            CreateMap<Course, CourseDto>().ReverseMap();
+            CreateMap<Course, CourseCreateDto> ().ReverseMap();
         }
     }
 }

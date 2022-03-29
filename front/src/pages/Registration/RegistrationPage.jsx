@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState } from 'react';
+import { getAge } from '../../Services/AgeCalculator';
 import { Home, HomePage } from '../Home/HomePage';
-
-
+import { Alert, Button, DatePicker, message } from 'antd';
 
 export const RegistrationPage = () => {
   const [name, setName] = useState('');
@@ -20,6 +20,12 @@ export const RegistrationPage = () => {
   const Registration = (values) => {
 
   }
+  const [date, setDate] = useState('');
+
+  const handleChange = value => {getAge(value)
+    setDate(value);
+  };
+
 
   return (
     <form onSubmit={HomePage}>
@@ -61,6 +67,7 @@ export const RegistrationPage = () => {
             required type="password"
             onChange={e => repeatPass(e.target.value)}
           />
+
           <input
             id="Age"
             className="form-control"

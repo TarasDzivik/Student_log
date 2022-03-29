@@ -13,7 +13,7 @@ namespace HoneycombTT.Controller
     [Route("/api/home")]
     public class HomeController : ControllerBase
     {
-        AppDbContext db;
+        private readonly AppDbContext db;
         public HomeController(AppDbContext context)
         {
             db = context;

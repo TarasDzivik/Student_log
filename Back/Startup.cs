@@ -14,6 +14,7 @@ using System;
 using Back.Services;
 using FluentValidation;
 using Back.Data.Models.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Back
 {
@@ -48,6 +49,16 @@ namespace Back
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+            #region
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                 .AddCookie("Cookies", options =>
+                 {
+                     options.LoginPath = "/Account/Login";
+                     options.LogoutPath = "/Account/Logout";
+                     options.AccessDeniedPath = "/Account/AccessDenied";
+                     options.ReturnUrlParameter = "ReturnUrl";
+                 });
+            #endregion // настройки куккі тимчасові не тесовані
 
             services.AddCors();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

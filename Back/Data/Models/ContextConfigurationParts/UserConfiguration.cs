@@ -20,8 +20,7 @@ namespace Back.Data.ContextConfigurationParts
                 .IsConcurrencyToken();
 
             builder.Property(s => s.Age)
-                .IsConcurrencyToken()
-                .IsRowVersion();
+                .IsConcurrencyToken();
 
             builder.Property(s => s.Email)
                 .HasMaxLength(50)
@@ -31,9 +30,6 @@ namespace Back.Data.ContextConfigurationParts
                 .ValueGeneratedOnAdd()
                 .HasColumnName("Registered Date")
                 .IsConcurrencyToken();
-
-            builder.Property(b => b.Timestamp)
-                .IsRowVersion();
         }
     }
 }
